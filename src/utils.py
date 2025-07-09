@@ -28,17 +28,15 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
     try:
         report = {}
 
-        for i in range(len(list(models))):
-            model = list(models.values())[i]
-            para=param[list(models.keys())[i]]
+        for key, values in models.items():
+            model = values
+            para = param[key]
 
             gs = GridSearchCV(model,para,cv=3)
             gs.fit(X_train,y_train)
 
             model.set_params(**gs.best_params_)
             model.fit(X_train,y_train)
-
-            #model.fit(X_train, y_train)  # Train model
 
             y_train_pred = model.predict(X_train)
 
@@ -48,7 +46,7 @@ def evaluate_models(X_train, y_train,X_test,y_test,models,param):
 
             test_model_score = r2_score(y_test, y_test_pred)
 
-            report[list(models.keys())[i]] = test_model_score
+            report[key] = test_model_score
 
         return report
 
